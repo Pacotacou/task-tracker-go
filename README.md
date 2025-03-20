@@ -2,6 +2,9 @@
 
 A simple command-line task management application written in Go.
 
+## Project URL
+https://roadmap.sh/projects/task-tracker
+
 ## Overview
 
 Task Tracker is a lightweight CLI tool that helps you manage your tasks. Features include:
