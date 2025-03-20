@@ -143,31 +143,17 @@ func (taskList *TaskList) ListTasks(filter string) error {
 	fmt.Println(strings.Repeat("-", 100))
 
 	switch filter {
-	case StatusDone:
-		for _, task := range taskList.Tasks {
-			if task.Status == StatusDone {
-				tasksPrinted = true
-				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
-			}
-		}
-	case StatusInProgress:
-		for _, task := range taskList.Tasks {
-			if task.Status == StatusInProgress {
-				tasksPrinted = true
-				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
-			}
-		}
-	case StatusTodo:
-		for _, task := range taskList.Tasks {
-			if task.Status == StatusTodo {
-				tasksPrinted = true
-				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
-			}
-		}
 	case "":
 		for _, task := range taskList.Tasks {
 			tasksPrinted = true
 			fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+		}
+	default:
+		for _, task := range taskList.Tasks {
+			if task.Status == filter {
+				tasksPrinted = true
+				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+			}
 		}
 	}
 
