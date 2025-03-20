@@ -135,14 +135,64 @@ func (taskList *TaskList) RemoveTask(id int) error {
 	return nil
 }
 
-func (taskList *TaskList) ListTasks() error {
-	if len(taskList.Tasks) == 0 {
-		return fmt.Errorf("no tasks")
-	}
-	fmt.Printf("%-5s %-15s %-60s %-20s\n", "ID", "Status", "Description", "Updated At")
+func (taskList *TaskList) ListTasks(filter string) error {
+	tasksPrinted := false
+
+	//print header
+	fmt.Printf("%-5s %-15s %-30s %-20s\n", "ID", "Status", "Description", "Updated At")
 	fmt.Println(strings.Repeat("-", 100))
-	for _, task := range taskList.Tasks {
-		fmt.Printf("%-5d %-15s %-60s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+
+	switch filter {
+	case StatusDone:
+		for _, task := range taskList.Tasks {
+			if task.Status == StatusDone {
+				tasksPrinted = true
+				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+			}
+		}
+	case StatusInProgress:
+		for _, task := range taskList.Tasks {
+			if task.Status == StatusInProgress {
+				tasksPrinted = true
+				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+			}
+		}
+	case StatusTodo:
+		for _, task := range taskList.Tasks {
+			if task.Status == StatusTodo {
+				tasksPrinted = true
+				fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+			}
+		}
+	case "":
+		for _, task := range taskList.Tasks {
+			tasksPrinted = true
+			fmt.Printf("%-5d %-15s %-30s %-20s\n", task.ID, task.Status, task.Description, task.UpdatedAt)
+		}
 	}
+
+	if !tasksPrinted {
+		fmt.Println("No tasks to print!")
+	}
+
+	return nil
+}
+
+func (taskList *TaskList) MarkTask(status string, id int) error {
+	found := false
+	for index, task := range taskList.Tasks {
+		if task.ID == id {
+			taskList.Tasks[index].Status = status
+			found = true
+		}
+	}
+	if !found {
+		return fmt.Errorf("error, id not found")
+	}
+	if err := taskList.SaveTasks(); err != nil {
+		return fmt.Errorf("error saving tasks, %v", err)
+	}
+	fmt.Println("Task marked", status, "successfully")
+
 	return nil
 }
